@@ -74,7 +74,6 @@ const CircularsPanel = () => {
               {visibleCirculars.map((circular, index) => (
                 <button key={circular._id} type="button" onClick={() => setSelectedCircular(circular)} className="group w-full text-left bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:border-amber-300 hover:shadow-md transition-all">
                   <div className="flex items-start gap-3">
-                    <span className="w-9 h-9 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-sm font-bold text-amber-700">{index + 1}</span>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-bold text-amber-800 leading-tight line-clamp-2">{circular.title}</p>
                       {circular.description && <p className="text-xs text-gray-700 leading-relaxed line-clamp-2 mt-1">{circular.description}</p>}
