@@ -115,11 +115,6 @@ export const createCircular = async (req, res) => {
       pdf,
       order: order || 0,
     }
-    if (req.file) {
-      circularData.pdfData = req.file.buffer
-      circularData.pdfContentType = req.file.mimetype
-    }
-
     const circular = await Circular.create(circularData);
 
     res.status(201).json({ success: true, data: circular });
@@ -180,11 +175,6 @@ export const updateCircular = async (req, res) => {
     }
 
     const update = { title, description, date, time, pdf, order, isActive };
-    if (req.file) {
-      update.pdfData = req.file.buffer;
-      update.pdfContentType = req.file.mimetype;
-    }
-
     const updated = await Circular.findByIdAndUpdate(
       req.params.id,
       update,

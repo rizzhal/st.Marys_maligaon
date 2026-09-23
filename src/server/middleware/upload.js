@@ -189,6 +189,7 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs-extra";
 import sharp from "sharp";
+import { removeFromStorage } from "../config/supabase.js";
 
 // Ensure upload directories exist
 const ensureDir = (dir) => {
@@ -301,7 +302,8 @@ export const verifyImageUploads = async (req, res, next) => {
   const files = req.files || (req.file ? [req.file] : []);
   try {
     for (const file of files) {
-      const metadata = await sharp(file.path).metadata();
+      const source = file.buffer || file.path;
+      const metadata = await sharp(source).metadata();
       if (!new Set(["jpeg", "png", "gif", "webp"]).has(metadata.format)) {
         throw new Error("Unsupported image format");
       }
@@ -383,15 +385,7 @@ export const compressMultipleImages = async (req, res, next) => {
 };
 
 export const deleteFile = async (filePath) => {
-  try {
-    const fullPath = path.join(process.cwd(), filePath);
-    if (fs.existsSync(fullPath)) {
-      await fs.unlink(fullPath);
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.error("Error deleting file:", error);
-    return false;
-  }
+  const normalized = filePath.replace(/^\/+/, '').replace(/^uploads\//, '')
+  await removeFromStorage(normalized)
+  return true
 };

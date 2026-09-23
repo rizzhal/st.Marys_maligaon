@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import path from 'path'
-import fs from 'fs-extra'
 import { v4 as uuidv4 } from 'uuid'
 import connectDB from '@/server/config/database.js'
+import { uploadToStorage } from '@/server/config/supabase.js'
 import { protect } from '@/server/middleware/auth.js'
 import { verifyImageUploads, verifyCircularPdf, compressSingleImage } from '@/server/middleware/upload.js'
 
@@ -14,8 +14,6 @@ import { createTeachingStaff, getTeachingStaff, getAllTeachingStaff, getTeaching
 import { createCircular, getCirculars, getAllCirculars, getCircularById, updateCircular, deleteCircular } from '@/server/controllers/circularController.js'
 import { createGallery, getGalleries, getAllGalleries, getGalleryById, updateGallery, deleteGallery, toggleGalleryStatus } from '@/server/controllers/galleryController.js'
 import { createDownload, getDownloads, getAllDownloads, getDownloadById, updateDownload, deleteDownload, toggleDownloadStatus } from '@/server/controllers/downloadController.js'
-
-const uploadRoot = path.join(process.cwd(), 'uploads')
 
 const cookieOptions = (options = {}) => {
   const production = process.env.NODE_ENV === 'production'
@@ -84,7 +82,7 @@ async function writeUpload(file, type, fieldname) {
   let filename
   if (type === 'image') {
     if (!extensionForMime[mimetype]) throw Object.assign(new Error('Only image files are allowed'), { status: 400 })
-    directory = path.join(uploadRoot, 'images')
+    directory = 'images'
     filename = `${uuidv4()}${extensionForMime[mimetype]}`
   } else if (type === 'pdf') {
     if (mimetype !== 'application/pdf' || path.extname(originalname).toLowerCase() !== '.pdf') {
@@ -95,12 +93,13 @@ async function writeUpload(file, type, fieldname) {
     if (buffer.subarray(0, 5).toString('ascii') !== '%PDF-') {
       throw Object.assign(new Error('Invalid PDF upload'), { status: 400 })
     }
+    await uploadToStorage(`circulars/${filename}`, buffer, mimetype)
     return {
       fieldname,
       originalname,
       encoding: '7bit',
       mimetype,
-      destination: '',
+      destination: 'circulars',
       filename,
       path: '',
       buffer,
@@ -110,13 +109,12 @@ async function writeUpload(file, type, fieldname) {
     const allowed = new Set(['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.zip', '.rar'])
     const ext = path.extname(originalname).toLowerCase()
     if (!allowed.has(ext)) throw Object.assign(new Error('Only document files are allowed'), { status: 400 })
-    directory = path.join(uploadRoot, 'downloads')
+    directory = 'downloads'
     filename = `${uuidv4()}${ext}`
   }
 
-  await fs.ensureDir(directory)
-  const filePath = path.join(directory, filename)
-  await fs.writeFile(filePath, Buffer.from(await file.arrayBuffer()))
+  const buffer = Buffer.from(await file.arrayBuffer())
+  await uploadToStorage(`${directory}/${filename}`, buffer, mimetype)
 
   return {
     fieldname,
@@ -125,7 +123,8 @@ async function writeUpload(file, type, fieldname) {
     mimetype,
     destination: directory,
     filename,
-    path: filePath,
+    path: '',
+    buffer,
     size,
   }
 }

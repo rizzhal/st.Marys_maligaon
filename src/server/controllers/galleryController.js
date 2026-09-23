@@ -187,10 +187,6 @@ import Gallery from "../models/Gallery.js";
 import { deleteFile } from "../middleware/upload.js";
 import { compressMultipleImages } from "../middleware/imageCompression.js";
 import fs from "fs-extra";
-import path from "path";
-
-// Set image width: 800 for good quality
-const IMAGE_WIDTH = 800;
 
 export const createGallery = async (req, res) => {
   try {
@@ -199,23 +195,9 @@ export const createGallery = async (req, res) => {
     let images = [];
 
     if (req.files && req.files.length > 0) {
-      const uploadDir = "uploads/images";
-      await fs.ensureDir(uploadDir);
-
-      const compressedPaths = await compressMultipleImages(
-        req.files,
-        uploadDir,
-        {
-          width: IMAGE_WIDTH,
-          quality: 80,
-        },
-      );
-
-      // Store paths with /uploads/images/ format
-      images = compressedPaths.map((compressedPath) => {
-        const filename = path.basename(compressedPath);
+      images = req.files.map((file) => {
         return {
-          url: `/uploads/images/${filename}`,
+          url: `/uploads/images/${file.filename}`,
           caption: "",
         };
       });
@@ -291,22 +273,9 @@ export const updateGallery = async (req, res) => {
         await deleteFile(oldPath);
       }
 
-      const uploadDir = "uploads/images";
-      await fs.ensureDir(uploadDir);
-
-      const compressedPaths = await compressMultipleImages(
-        req.files,
-        uploadDir,
-        {
-          width: IMAGE_WIDTH,
-          quality: 80,
-        },
-      );
-
-      images = compressedPaths.map((compressedPath) => {
-        const filename = path.basename(compressedPath);
+      images = req.files.map((file) => {
         return {
-          url: `/uploads/images/${filename}`,
+          url: `/uploads/images/${file.filename}`,
           caption: "",
         };
       });
