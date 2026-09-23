@@ -6,6 +6,8 @@ const circularSchema = new mongoose.Schema({
   date: { type: Date, required: true, default: Date.now },
   time: { type: String, default: '00:00:00' },
   pdf: { type: String, default: null },
+  pdfData: { type: Buffer, default: null },
+  pdfContentType: { type: String, default: 'application/pdf' },
   isActive: { type: Boolean, default: true },
   order: { type: Number, default: 0 }
 }, { timestamps: true })

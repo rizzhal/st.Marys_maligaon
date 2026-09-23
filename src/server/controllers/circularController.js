@@ -101,22 +101,26 @@
 // }
 
 import Circular from "../models/Circular.js";
-import { deleteFile } from "../middleware/upload.js";
-import path from "path";
 
 export const createCircular = async (req, res) => {
   try {
     const { title, description, date, time, order } = req.body;
     const pdf = req.file ? `/uploads/circulars/${req.file.filename}` : null;
 
-    const circular = await Circular.create({
+    const circularData = {
       title,
       description,
       date: date || new Date(),
       time: time || "00:00:00",
       pdf,
       order: order || 0,
-    });
+    }
+    if (req.file) {
+      circularData.pdfData = req.file.buffer
+      circularData.pdfContentType = req.file.mimetype
+    }
+
+    const circular = await Circular.create(circularData);
 
     res.status(201).json({ success: true, data: circular });
   } catch (error) {
@@ -172,16 +176,18 @@ export const updateCircular = async (req, res) => {
     let pdf = circular.pdf;
 
     if (req.file) {
-      if (circular.pdf) {
-        const oldPath = `uploads/circulars/${circular.pdf.split("/").pop()}`;
-        await deleteFile(oldPath);
-      }
       pdf = `/uploads/circulars/${req.file.filename}`;
+    }
+
+    const update = { title, description, date, time, pdf, order, isActive };
+    if (req.file) {
+      update.pdfData = req.file.buffer;
+      update.pdfContentType = req.file.mimetype;
     }
 
     const updated = await Circular.findByIdAndUpdate(
       req.params.id,
-      { title, description, date, time, pdf, order, isActive },
+      update,
       { new: true },
     );
 
@@ -198,11 +204,6 @@ export const deleteCircular = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "Circular not found" });
-    }
-
-    if (circular.pdf) {
-      const oldPath = `uploads/circulars/${circular.pdf.split("/").pop()}`;
-      await deleteFile(oldPath);
     }
 
     await circular.deleteOne();

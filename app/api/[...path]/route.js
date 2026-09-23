@@ -90,8 +90,22 @@ async function writeUpload(file, type, fieldname) {
     if (mimetype !== 'application/pdf' || path.extname(originalname).toLowerCase() !== '.pdf') {
       throw Object.assign(new Error('Only PDF files are allowed'), { status: 400 })
     }
-    directory = path.join(uploadRoot, 'circulars')
     filename = `${uuidv4()}.pdf`
+    const buffer = Buffer.from(await file.arrayBuffer())
+    if (buffer.subarray(0, 5).toString('ascii') !== '%PDF-') {
+      throw Object.assign(new Error('Invalid PDF upload'), { status: 400 })
+    }
+    return {
+      fieldname,
+      originalname,
+      encoding: '7bit',
+      mimetype,
+      destination: '',
+      filename,
+      path: '',
+      buffer,
+      size,
+    }
   } else {
     const allowed = new Set(['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.zip', '.rar'])
     const ext = path.extname(originalname).toLowerCase()

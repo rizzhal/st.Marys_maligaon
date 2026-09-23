@@ -217,17 +217,7 @@ const imageStorage = multer.diskStorage({
 });
 
 // Circular PDF storage
-const circularStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = "uploads/circulars";
-    ensureDir(dir);
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const filename = `${uuidv4()}.pdf`;
-    cb(null, filename);
-  },
-});
+const circularStorage = multer.memoryStorage();
 
 // Download file storage
 const downloadStorage = multer.diskStorage({
@@ -326,11 +316,10 @@ export const verifyImageUploads = async (req, res, next) => {
 export const verifyCircularPdf = async (req, res, next) => {
   if (!req.file) return next();
   try {
-    const header = (await fs.readFile(req.file.path)).subarray(0, 5).toString("ascii");
+    const header = req.file.buffer.subarray(0, 5).toString("ascii");
     if (header !== "%PDF-") throw new Error("Invalid PDF");
     next();
   } catch (error) {
-    await removeFiles([req.file]);
     res.status(400).json({ success: false, message: "Invalid PDF upload" });
   }
 };
