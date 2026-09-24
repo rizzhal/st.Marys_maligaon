@@ -32,3 +32,9 @@ export async function downloadFromStorage(filePath) {
   if (error) return null
   return data
 }
+
+export async function createStorageUrl(filePath) {
+  const { data, error } = await getStorageClient().storage.from(bucket).createSignedUrl(filePath, 300)
+  if (error) throw error
+  return data.signedUrl
+}
