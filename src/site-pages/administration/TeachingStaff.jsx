@@ -4,6 +4,7 @@ import PageHeader from '../../components/common/PageHeader.jsx'
 import SectionWrapper from '../../components/common/SectionWrapper.jsx'
 import StaffCard from '../../components/common/StaffCard.jsx'
 import api from '../../services/api.js'
+import { getMediaUrl } from '../../utils/media.js'
 
 const TeachingStaff = () => {
   const [teachingStaff, setTeachingStaff] = useState([])
@@ -76,7 +77,7 @@ const TeachingStaff = () => {
                       name={t.name} 
                       subject={t.designation} 
                       qualification={t.qualification} 
-                      photo={t.image} 
+                      photo={getMediaUrl(t.image)} 
                     />
                   ))}
                 </div>
