@@ -105,7 +105,7 @@ import Circular from "../models/Circular.js";
 export const createCircular = async (req, res) => {
   try {
     const { title, description, date, time, order } = req.body;
-    const pdf = req.file ? `/uploads/circulars/${req.file.filename}` : null;
+    const pdf = req.file ? `/api/files/circulars/${req.file.filename}` : null;
 
     const circularData = {
       title,
@@ -171,7 +171,7 @@ export const updateCircular = async (req, res) => {
     let pdf = circular.pdf;
 
     if (req.file) {
-      pdf = `/uploads/circulars/${req.file.filename}`;
+      pdf = `/api/files/circulars/${req.file.filename}`;
     }
 
     const update = { title, description, date, time, pdf, order, isActive };

@@ -16,6 +16,7 @@ const formatDate = (date) => {
 const getPdfUrl = (pdf) => {
   if (!pdf) return null
   if (/^https?:\/\//i.test(pdf)) return pdf
+  if (pdf.startsWith('/uploads/')) return `/api/files/${pdf.slice('/uploads/'.length)}`
   return pdf.startsWith('/') ? pdf : `/${pdf}`
 }
 

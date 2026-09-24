@@ -1,6 +1,13 @@
 import React from 'react'
 import { Edit, Trash2, Bell, FileText, Eye } from 'lucide-react'
 
+const getPdfUrl = (pdf) => {
+  if (!pdf) return null
+  if (/^https?:\/\//i.test(pdf)) return pdf
+  if (pdf.startsWith('/uploads/')) return `/api/files/${pdf.slice('/uploads/'.length)}`
+  return pdf.startsWith('/') ? pdf : `/${pdf}`
+}
+
 const CircularList = ({ data, loading, onEdit, onDelete }) => {
   if (loading) {
     return (
@@ -61,7 +68,7 @@ const CircularList = ({ data, loading, onEdit, onDelete }) => {
                 <td className="px-6 py-4">
                   {item.pdf ? (
                     <a
-                      href={item.pdf}
+                      href={getPdfUrl(item.pdf)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-maroon-600 hover:text-maroon-700 text-sm"
