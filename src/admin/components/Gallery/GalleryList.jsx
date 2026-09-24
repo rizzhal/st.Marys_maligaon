@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Edit, Trash2, Image, Eye, ChevronDown, ChevronRight } from 'lucide-react'
+import { getMediaUrl } from '../../../utils/media.js'
 
 const BACKEND_URL = '';
 
@@ -14,11 +15,7 @@ const GalleryList = ({ data, loading, onEdit, onDelete }) => {
   }
 
   const getFullImageUrl = (url) => {
-    if (!url) return ''
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url
-    }
-    return `${BACKEND_URL}${url}`
+    return getMediaUrl(url)
   }
 
   if (loading) {

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Edit, Trash2, Users } from 'lucide-react'
+import { getMediaUrl } from '../../../utils/media.js'
 
 const CommitteeList = ({ data, loading, onEdit, onDelete }) => {
   if (loading) {
@@ -41,7 +42,7 @@ const CommitteeList = ({ data, loading, onEdit, onDelete }) => {
               <tr key={item._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4">
                   <img
-                    src={item.image || `https://ui-avatars.com/api/?name=${item.name}&background=7A0C1E&color=fff&size=40`}
+                    src={getMediaUrl(item.image) || `https://ui-avatars.com/api/?name=${item.name}&background=7A0C1E&color=fff&size=40`}
                     alt={item.name}
                     className="w-10 h-10 rounded-full object-cover"
                   />

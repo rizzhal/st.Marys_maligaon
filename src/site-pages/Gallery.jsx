@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Images, X } from 'lucide-react'
 import PageHeader from '../components/common/PageHeader.jsx'
 import SectionWrapper from '../components/common/SectionWrapper.jsx'
+import { getMediaUrl } from '../utils/media.js'
 
 // IMPORTANT: This is the backend URL WITHOUT /api at the end
 const BACKEND_URL = '';
@@ -30,13 +31,7 @@ const Gallery = () => {
   }
 
   const getFullImageUrl = (url) => {
-    if (!url) return ''
-    // If already absolute URL, return as is
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url
-    }
-    // Otherwise prepend backend URL
-    return `${BACKEND_URL}${url}`
+    return getMediaUrl(url)
   }
 
   const openLightbox = (eventIndex, imageIndex) => {

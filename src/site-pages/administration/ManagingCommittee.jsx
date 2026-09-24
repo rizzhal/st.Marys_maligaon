@@ -3,6 +3,7 @@ import { Users } from 'lucide-react'
 import PageHeader from '../../components/common/PageHeader.jsx'
 import SectionWrapper from '../../components/common/SectionWrapper.jsx'
 import api from '../../services/api.js'
+import { getMediaUrl } from '../../utils/media.js'
 
 const ManagingCommittee = () => {
   const [committee, setCommittee] = useState([])
@@ -48,7 +49,7 @@ const ManagingCommittee = () => {
             committee.map((m) => (
               <SectionWrapper key={m._id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
                 <img
-                  src={m.image || `https://ui-avatars.com/api/?name=${m.name}&background=7A0C1E&color=fff&size=48`}
+                  src={getMediaUrl(m.image) || `https://ui-avatars.com/api/?name=${m.name}&background=7A0C1E&color=fff&size=48`}
                   alt={m.name}
                   className="w-12 h-12 rounded-full object-cover"
                 />

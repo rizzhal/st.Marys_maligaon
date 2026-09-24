@@ -3,6 +3,7 @@ import { Landmark, User, Mail, Phone } from 'lucide-react'
 import PageHeader from '../../components/common/PageHeader.jsx'
 import SectionWrapper from '../../components/common/SectionWrapper.jsx'
 import api from '../../services/api.js'
+import { getMediaUrl } from '../../utils/media.js'
 
 const Management = () => {
   const [management, setManagement] = useState([])
@@ -111,7 +112,7 @@ const Management = () => {
                   <div className="aspect-square bg-maroon-50 flex items-center justify-center overflow-hidden">
                     {member.image ? (
                       <img 
-                        src={member.image} 
+                        src={getMediaUrl(member.image)} 
                         alt={member.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {

@@ -3,6 +3,7 @@ import { Contact } from 'lucide-react'
 import PageHeader from '../../components/common/PageHeader.jsx'
 import SectionWrapper from '../../components/common/SectionWrapper.jsx'
 import api from '../../services/api.js'
+import { getMediaUrl } from '../../utils/media.js'
 
 const Staff = () => {
   const [staff, setStaff] = useState([])
@@ -53,7 +54,7 @@ const Staff = () => {
                 <SectionWrapper key={s._id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                   <div className="flex items-center gap-3">
                     <img
-                      src={s.image || `https://ui-avatars.com/api/?name=${s.name}&background=7A0C1E&color=fff&size=40`}
+                      src={getMediaUrl(s.image) || `https://ui-avatars.com/api/?name=${s.name}&background=7A0C1E&color=fff&size=40`}
                       alt={s.name}
                       className="w-10 h-10 rounded-full object-cover"
                     />
