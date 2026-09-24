@@ -142,7 +142,7 @@ import path from "path";
 export const createDownload = async (req, res) => {
   try {
     const { title, category, order } = req.body;
-    const file = req.file ? `/uploads/downloads/${req.file.filename}` : null;
+    const file = req.file ? `/api/files/downloads/${req.file.filename}` : null;
 
     if (!file) {
       return res
@@ -215,7 +215,7 @@ export const updateDownload = async (req, res) => {
         const oldPath = `uploads/downloads/${download.file.split("/").pop()}`;
         await deleteFile(oldPath);
       }
-      file = `/uploads/downloads/${req.file.filename}`;
+      file = `/api/files/downloads/${req.file.filename}`;
     }
 
     const updated = await Download.findByIdAndUpdate(

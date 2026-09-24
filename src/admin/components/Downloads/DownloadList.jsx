@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Edit, Trash2, FileText, Download, ChevronDown, ChevronRight } from 'lucide-react'
+import { getMediaUrl } from '../../../utils/media.js'
 
 const DownloadList = ({ data, loading, onEdit, onDelete }) => {
   const [expandedCategories, setExpandedCategories] = useState({})
@@ -87,7 +88,7 @@ const DownloadList = ({ data, loading, onEdit, onDelete }) => {
                     <div className="flex items-center gap-2">
                       {item.file && (
                         <a
-                          href={item.file}
+                          href={getMediaUrl(item.file)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-2 text-gray-500 hover:text-maroon-600 hover:bg-maroon-50 rounded-lg transition-colors"

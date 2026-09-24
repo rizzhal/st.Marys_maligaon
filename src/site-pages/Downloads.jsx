@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Download, FileText, FileCheck, FileSpreadsheet } from 'lucide-react'
 import PageHeader from '../components/common/PageHeader.jsx'
 import SectionWrapper from '../components/common/SectionWrapper.jsx'
+import { getMediaUrl } from '../utils/media.js'
 
 const BACKEND_URL = '';
 
@@ -39,11 +40,7 @@ const Downloads = () => {
   }
 
   const getFullFileUrl = (url) => {
-    if (!url) return '#'
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url
-    }
-    return `${BACKEND_URL}${url}`
+    return getMediaUrl(url) || '#'
   }
 
   const groupByCategory = (items) => {
